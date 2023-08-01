@@ -4,8 +4,12 @@ dotenv.config();
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import express from "express";
+
+import authRouter from './routes/auth.js';
 import usersRouter from './routes/api/users.js';
 import registerRouter from './routes/register.js';
+import refreshRouter from './routes/refresh.js'
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
@@ -41,9 +45,11 @@ app.use(express.json());
 //middleware for cookies
 app.use(cookieParser());
 
-app.use('/register', registerRouter);
+app.use('/auth', authRouter);
+app.use('/refresh', refreshRouter);
 
 app.use(verifyJWT);
+app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 
 //serve static files
