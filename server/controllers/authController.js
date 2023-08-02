@@ -1,4 +1,4 @@
-import User from "../model/User";
+import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"; // jsonwebtoken est utilisé pour gérer l'authentification et l'autorisation des utilisateurs
 
@@ -45,4 +45,4 @@ const handleLogin = async (req, res) => {
     }
 }
 
-module.exports = { handleLogin };
+export default { handleLogin };
