@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import express from "express";
 import usersRouter from './routes/api/users.js';
+import ordonnancesRouter from './routes/api/ordonnances.js';
 import registerRouter from './routes/register.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -45,6 +46,7 @@ app.use('/register', registerRouter);
 
 app.use(verifyJWT);
 app.use('/users', usersRouter);
+app.use('/ordonnances', ordonnancesRouter);
 
 //serve static files
 app.use(express.static(path.join(__dirname, '/public')));

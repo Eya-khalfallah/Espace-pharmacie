@@ -1,6 +1,6 @@
 import User from "../model/User";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; // jsonwebtoken est utilisé pour gérer l'authentification et l'autorisation des utilisateurs
 
 const handleLogin = async (req, res) => {
     const { email, pwd } = req.body;
@@ -18,6 +18,7 @@ const handleLogin = async (req, res) => {
                 "UserInfo": {
                     "email": foundUser.email,
                     "roles": roles
+                    
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
