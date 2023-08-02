@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const adherentSchema = new Schema({
+const beneficiaireSchema = new Schema({
+    Adherent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Adherent',
+        required: true,
+    },
     nom: {
         type: String,
         required: true
@@ -28,4 +33,4 @@ const adherentSchema = new Schema({
     }
 });
 
-export default mongoose.model('Adherent', adherentSchema);
+export default mongoose.model('Beneficiaire', beneficiaireSchema);

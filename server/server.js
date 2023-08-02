@@ -10,6 +10,7 @@ import usersRouter from './routes/api/users.js';
 import registerRouter from './routes/register.js';
 import refreshRouter from './routes/refresh.js';
 import logoutRouter from './routes/logout.js';
+import adherentsRouter from './routes/api/adherents.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,6 +54,7 @@ app.use('/logout', logoutRouter);
 app.use(verifyJWT);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
+app.use('/adherents', adherentsRouter);
 
 //serve static files
 app.use(express.static(path.join(__dirname, '/public')));
