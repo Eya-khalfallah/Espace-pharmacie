@@ -8,7 +8,8 @@ import express from "express";
 import authRouter from './routes/auth.js';
 import usersRouter from './routes/api/users.js';
 import registerRouter from './routes/register.js';
-import refreshRouter from './routes/refresh.js'
+import refreshRouter from './routes/refresh.js';
+import logoutRouter from './routes/logout.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -47,6 +48,7 @@ app.use(cookieParser());
 
 app.use('/auth', authRouter);
 app.use('/refresh', refreshRouter);
+app.use('/logout', logoutRouter);
 
 app.use(verifyJWT);
 app.use('/register', registerRouter);
