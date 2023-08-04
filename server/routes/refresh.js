@@ -1,6 +1,6 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import refreshTokenController from '../controllers/refreshTokenController.js';
+const refreshTokenController = require('../controllers/refreshTokenController.js');
 router.get('/', refreshTokenController.handleRefreshToken);
 
-export default router;
+module.exports= router;

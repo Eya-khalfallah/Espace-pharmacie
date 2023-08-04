@@ -1,4 +1,4 @@
-import logEvents from "./logEvents.js"
+const logEvents = require('./logEvents.js');
 
 const errorHandler = (err, req, res, next) => {
     logEvents(`${err.name}: ${err.message}`, 'errLog.txt');
@@ -6,4 +6,4 @@ const errorHandler = (err, req, res, next) => {
     res.status(500).send(err.message);
 };
 
-export default errorHandler;
+module.exports = errorHandler;

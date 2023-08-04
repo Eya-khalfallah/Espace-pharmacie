@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const adherentSchema = new Schema({
@@ -28,4 +28,4 @@ const adherentSchema = new Schema({
     }
 });
 
-export default mongoose.model('Adherent', adherentSchema);
+module.exports = mongoose.model('Adherent', adherentSchema);

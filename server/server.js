@@ -1,29 +1,17 @@
 // server.js
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import express from "express";
-
-import authRouter from './routes/auth.js';
-import usersRouter from './routes/api/users.js';
-import registerRouter from './routes/register.js';
-import refreshRouter from './routes/refresh.js';
-import logoutRouter from './routes/logout.js';
-import adherentsRouter from './routes/api/adherents.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const express = require('express');
 const app = express();
-import path from "path";
-import cors from "cors";
-import corsOptions from "./config/corpsOptions.js";
-import errorHandler from "./middleware/errorHandler.js";
-import verifyJWT from './middleware/verifyJWT.js';
-import cookieParser from "cookie-parser";
-import credentials from "./middleware/credentials.js";
-import mongoose from "mongoose";
-import connectDB from "./config/dbConn.js";
+const path = require('path');
+const cors = require('cors');
+const corsOptions = require('./config/corpsOptions.js');
+const errorHandler = require('./middleware/errorHandler.js');
+const verifyJWT = require('./middleware/verifyJWT.js');
+const cookieParser = require('cookie-parser');
+const credentials = require('./middleware/credentials.js');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn.js');
 
 const PORT = process.eventNames.PORT || 3500 ;
 
@@ -47,18 +35,17 @@ app.use(express.json());
 //middleware for cookies
 app.use(cookieParser());
 
-app.use('/auth', authRouter);
-app.use('/refresh', refreshRouter);
-app.use('/logout', logoutRouter);
+app.use('/auth', require('./routes/auth.js'));
+app.use('/refresh', require('./routes/refresh.js'));
+app.use('/logout', require('./routes/logout.js'));
 
 app.use(verifyJWT);
-app.use('/register', registerRouter);
-app.use('/users', usersRouter);
-app.use('/adherents', adherentsRouter);
+app.use('/register', require('./routes/register.js'));
+app.use('/users', require('./routes/api/users.js'));
+app.use('/adherents', require('./routes/api/adherents.js'));
 
 //serve static files
-app.use(express.static(path.join(__dirname, '/public')));
-app.use('/subdir', express.static(path.join(__dirname, '/public')));
+app.use('/', express.static(path.join(__dirname, '/public')));
 
 app.use(errorHandler);
 

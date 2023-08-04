@@ -1,8 +1,8 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import adherentsController from '../../controllers/adherentController.js'
-import ROLES_LIST from '../../config/roles_list.js';
-import verifyRoles from '../../middleware/verifyRoles.js';
+const adherentsController = require('../../controllers/adherentController.js');
+const ROLES_LIST = require('../../config/roles_list.js');
+const verifyRoles = require('../../middleware/verifyRoles.js');
 
 router.route('/')
     .get(verifyRoles(ROLES_LIST.Admin), adherentsController.getAllAdherents)
@@ -12,4 +12,4 @@ router.route('/')
 router.route('/matricule')
     .get(verifyRoles(ROLES_LIST.Admin), adherentsController.getAdherent);
 
-export default router;
+module.exports=  router;

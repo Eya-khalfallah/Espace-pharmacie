@@ -1,12 +1,13 @@
-import format from 'date-fns';
-import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
-import fsPromises from 'fs/promises'
-import path from 'path';
+const { format } = require('date-fns');
+const { v4: uuid } = require('uuid');
+
+const fs = require('fs');
+const fsPromises = require('fs').promises;
+const path = require('path');
 
 const logEvents = async (message, logName) => {
   const dateTime = `${format(new Date(), 'yyyy/mm/dd')}`;
-  const logItem = `${dateTime}\t${uuidv4()}\t${message}\n`; // Add parentheses after uuid
+  const logItem = `${dateTime}\t${uuid()}\t${message}\n`; // Add parentheses after uuid
     console.log(logItem);
   try {
     if (!fs.existsSync(path.join(__dirname, '..' , 'logs'))) {
@@ -24,4 +25,4 @@ const logger = (req, res, next) => {
   next();
 };
 
-export default { logger , logEvents};
+module.exports = { logger , logEvents};

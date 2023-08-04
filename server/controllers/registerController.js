@@ -1,5 +1,5 @@
-import User from '../model/User.js';
-import bcrypt from 'bcrypt';
+const User = require('../model/User');
+const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
     const { nom, prénom, email, pwd } = req.body;
@@ -29,4 +29,4 @@ const handleNewUser = async (req, res) => {
     }
 }
 
-export default { handleNewUser };
+module.exports = { handleNewUser };

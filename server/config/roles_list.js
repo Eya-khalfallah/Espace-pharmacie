@@ -3,4 +3,4 @@ const ROLES_LIST = {
     "User": 2001
 }
 
-export default ROLES_LIST
+module.exports = ROLES_LIST

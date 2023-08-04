@@ -1,4 +1,4 @@
-const Adherent = require('../model/Adherent.js');
+const Adherent = require('../model/Adherent')
 
 const getAllAdherents = async (req, res) => {
     const adherents = await Adherent.find();

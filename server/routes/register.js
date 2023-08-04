@@ -1,10 +1,10 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import registerController from '../controllers/registerController.js';
-import ROLES_LIST from '../config/roles_list.js';
-import verifyRoles from '../middleware/verifyRoles.js';
+const registerController = require('../controllers/registerController.js');
+const ROLES_LIST = require('../config/roles_list.js');
+const verifyRoles = require('../middleware/verifyRoles.js');
 
 router.route('/')
     .post(verifyRoles(ROLES_LIST.Admin), registerController.handleNewUser);
 
-export default router;
+module.exports= router;
