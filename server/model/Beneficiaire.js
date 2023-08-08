@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const beneficiaireSchema = new Schema({
-    Adherent: {
+    adherent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Adherent',
         required: true,

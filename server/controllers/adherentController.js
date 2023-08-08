@@ -1,4 +1,5 @@
 const Adherent = require('../model/Adherent.js');
+const Beneficiaire = require('../model/Beneficiaire.js');
 
 const getAllAdherents = async (req, res) => {
     const adherents = await Adherent.find();
@@ -7,12 +8,14 @@ const getAllAdherents = async (req, res) => {
 }
 
 const getAdherent = async (req, res) => {
-    if (!req?.params?.matricule) return res.status(400).json({ "message": 'Adherent metricule required' });
-    const adherent = await Adherent.findOne({ matricule: req.params.matricule }).exec();
-    if (!Adherent) {
-        return res.status(204).json({ 'message': `Adherent matricule ${req.params.matricule} not found` });
+    if (!req?.body?.matricule) return res.status(400).json({ "message": 'Adherent matricule required' });
+    const adherent = await Adherent.findOne({ matricule: req.body.matricule }).exec();
+    if (!adherent) {
+        return res.status(204).json({ 'message': `Adherent matricule ${req.body.matricule} not found` });
     }
-    res.json(matricule);
+    res.json(adherent);
+    const beneficiaire = await Beneficiaire.find({ adherent: adherent });
+    res.json(beneficiaire);
 }
 
 const createNewAdherent = async (req, res) => {

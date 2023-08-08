@@ -1,34 +1,35 @@
-const Adherent = require('../model/Adherent')
+const Beneficiaire = require('../model/Beneficiaire')
 
-const getAllAdherents = async (req, res) => {
-    const adherents = await Adherent.find();
-    if (!adherents) return res.status(204).json({ 'message': 'No adherents found' });
-    res.json(adherents);
+const getAllbeneficiaires = async (req, res) => {
+    const beneficiaires = await Beneficiaire.find();
+    if (!beneficiaires) return res.status(204).json({ 'message': 'No beneficiaires found' });
+    res.json(beneficiaires);
 }
 
-const getAdherent = async (req, res) => {
-    if (!req?.params?.matricule) return res.status(400).json({ "message": 'Adherent metricule required' });
-    const adherent = await Adherent.findOne({ matricule: req.params.matricule }).exec();
-    if (!Adherent) {
-        return res.status(204).json({ 'message': `Adherent matricule ${req.params.matricule} not found` });
+const getbeneficiaire = async (req, res) => {
+    if (!req?.params?.matricule) return res.status(400).json({ "message": 'beneficiaire metricule required' });
+    const beneficiaire = await Beneficiaire.findOne({ matricule: req.params.matricule }).exec();
+    if (!beneficiaire) {
+        return res.status(204).json({ 'message': `beneficiaire matricule ${req.params.matricule} not found` });
     }
     res.json(matricule);
 }
 
-const createNewAdherent = async (req, res) => {
+const createNewbeneficiaire = async (req, res) => {
     /* if (!req?.body?.nom || !req?.body?.prénom || !req?.body?.matricule || !req?.body?.sexe || !req?.body?.adresse  || !req?.body?.telephone ) {
         return res.status(400).json({ 'message': 'all the champs are required' });
     } */
 
     const { nom, prénom, matricule, sexe, adresse, telephone } = req.body;
-    if (!nom || !prénom || !matricule || !sexe || !adresse || !telephone ) return res.status(400).json({ 'message': 'all the chapms are required.' });
+    if (!adherent || !nom || !prénom || !matricule || !sexe || !adresse || !telephone ) return res.status(400).json({ 'message': 'all the chapms are required.' });
     // check for duplicate usernames in the db
 
-    const duplicate = await Adherent.findOne({ matricule: req.body.matricule }).exec();
+    const duplicate = await Beneficiaire.findOne({ matricule: req.body.matricule , adherent: req.body.adherent }).exec();
     if (duplicate) return res.sendStatus(409); //Conflict
 
     try {
-        const result = await Adherent.create({
+        const result = await Beneficiaire.create({
+            adherent: req.body.adherent,
             nom: req.body.nom,
             prénom: req.body.prénom,
             matricule: req.body.matricule,
@@ -39,28 +40,28 @@ const createNewAdherent = async (req, res) => {
 
         console.log(result)
 
-        res.status(201).json({ 'success': 'New adherent created!' });
+        res.status(201).json({ 'success': 'New beneficiaire created!' });
     } catch (err) {
         console.error(err);
     }
 };
 
-const deleteAdherent = async (req, res) => {
+const deletebeneficiaire = async (req, res) => {
     if (!req?.body?.matricule) {
-        return res.status(400).json({ "message": 'Adherent matricule required' });
+        return res.status(400).json({ "message": 'beneficiaire matricule required' });
     }
 
-    const adherent = await Adherent.findOne({ matricule: req.body.matricule }).exec();
-    if (!adherent) {
-        return res.status(204).json({ 'message': 'Adherent matricule not found' });
+    const beneficiaire = await Beneficiaire.findOne({ matricule: req.body.matricule }).exec();
+    if (!beneficiaire) {
+        return res.status(204).json({ 'message': 'beneficiaire matricule not found' });
     }
-    const result = await adherent.deleteOne({ matricule: req.body.matricule });
+    const result = await Beneficiaire.deleteOne({ matricule: req.body.matricule });
     res.json(result);
 }
 
 module.exports = {
-    getAllAdherents,
-    getAdherent,
-    createNewAdherent,
-    deleteAdherent
+    getAllbeneficiaires,
+    getbeneficiaire,
+    createNewbeneficiaire,
+    deletebeneficiaire
 }
