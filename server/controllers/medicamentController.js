@@ -1,4 +1,4 @@
-import Medicament from '../model/Medicament.js';
+const Medicament = require ('../model/Medicament.js');
 
 
 
@@ -22,8 +22,8 @@ const createNewMedicament = async (req, res) => {
         return res.status(400).json({ 'message': 'all the champs are required' });
     } */
 
-    const { Code, Medicaments, Prix} = req.body;
-    if (!Code || !Medicaments || !Prix ) return res.status(400).json({ 'message': 'all the chapms are required.' });
+    const { Code, Nom_Medicament, Prix, Quantite} = req.body;
+    if (!Code || !Nom_Medicament || !Prix || !Quantite ) return res.status(400).json({ 'message': 'all the chapms are required.' });
     // check for duplicate usernames in the db
 
     const duplicate = await Medicament.findOne({ Code: req.body.Code }).exec();
@@ -32,8 +32,9 @@ const createNewMedicament = async (req, res) => {
     try {
         const result = await Medicament.create({
             Code: req.body.Code,
-            Medicaments: req.body.Medicaments,
+            Nom_Medicament: req.body.Nom_Medicament,
             Prix: req.body.Prix,
+            Quantite: req.body.Quantite,
            
         });
 
@@ -58,7 +59,7 @@ const deleteMedicament = async (req, res) => {
     res.json(result);
 }
 
-export default {
+module.exports = {
     getAllMedicaments,
     getMedicament,
     createNewMedicament,

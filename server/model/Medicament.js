@@ -14,6 +14,10 @@ const medicamentSchema = new Schema({
         type:Number,
         required: true
     },
+    Quantite:{
+        type:Number,
+        required: true
+    },
   
 });
 export default mongoose.model('Medicament',medicamentSchema);

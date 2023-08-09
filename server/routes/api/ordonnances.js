@@ -1,8 +1,8 @@
-import express from 'express';
-const  router = express.Router();
-import ordonnanceController from'../../controllers/ordonnanceConroller.js';
-import ROLES_LIST from'../../config/roles_list.js';
-import verifyRoles from'../../middleware/verifyRoles.js';
+const express = require('express');
+const router = express.Router();
+const ordonnanceController = require('../../controllers/ordonnanceConroller.js');
+const ROLES_LIST = require('../../config/roles_list.js');
+const verifyRoles = require('../../middleware/verifyRoles.js');
 
 router.route('/')
     .get(ordonnanceController.getAllOrdonnances)
@@ -12,4 +12,4 @@ router.route('/')
 router.route('/:id')
     .get(ordonnanceController.getOrdonnance);
 
-export default router;
+    module.exports=  router;
