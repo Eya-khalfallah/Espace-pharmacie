@@ -14,8 +14,8 @@ const getAdherent = async (req, res) => {
         return res.status(204).json({ 'message': `Adherent matricule ${req.body.matricule} not found` });
     }
     res.json(adherent);
-    const beneficiaire = await Beneficiaire.find({ adherent: adherent });
-    res.json(beneficiaire);
+    const beneficiaires = await Beneficiaire.find({ adherent: adherent });
+    res.json(beneficiaires);
 }
 
 const createNewAdherent = async (req, res) => {
