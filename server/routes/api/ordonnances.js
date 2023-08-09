@@ -7,7 +7,7 @@ import verifyRoles from'../../middleware/verifyRoles.js';
 router.route('/')
     .get(ordonnanceController.getAllOrdonnances)
     .post( ordonnanceController.createNewOrdonnance)
-    .put(  ordonnanceController.updateOrdonnance)
+    
     .delete( ordonnanceController.deleteOrdonnance);
 router.route('/:id')
     .get(ordonnanceController.getOrdonnance);

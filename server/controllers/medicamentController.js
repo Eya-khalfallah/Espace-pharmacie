@@ -1,54 +1,66 @@
-import  Medicament from'../model/Medicament';
+import Medicament from '../model/Medicament.js';
 
-// Middleware pour obtenir tous les médicaments
-async function getAllMedicaments(req, res) {
-  try {
+
+
+const getAllMedicaments = async (req, res) => {
     const medicaments = await Medicament.find();
+    if (!medicaments?.length) return res.status(204).json({ 'message': 'No medicaments found' });
     res.json(medicaments);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des médicaments.', error: err.message });
-  }
 }
 
-// Middleware pour mettre à jour un médicament
-async function updateMedicament(req, res) {
-  try {
-    const { id } = req.params;
-    const updatedMedicament = await Medicament.findByIdAndUpdate(id, req.body, { new: true });
-    res.json(updatedMedicament);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour du médicament.', error: err.message });
-  }
-}
-
-// Middleware pour supprimer un médicament
-async function deleteMedicament(req, res) {
-  try {
-    const { id } = req.params;
-    await Medicament.findByIdAndRemove(id);
-    res.json({ message: 'Le médicament a été supprimé avec succès.' });
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la suppression du médicament.', error: err.message });
-  }
-}
-
-// Middleware pour obtenir un médicament par son ID
-async function getMedicament(req, res) {
-  try {
-    const { id } = req.params;
-    const medicament = await Medicament.findById(id);
-    if (!medicament) {
-      return res.status(404).json({ message: 'Le médicament demandé est introuvable.' });
+const getMedicament = async (req, res) => {
+    if (!req?.params?.matricule) return res.status(400).json({ "message": 'Medicament metricule required' });
+    const medicament = await Medicament.findOne({ Code: req.params.Code }).exec();
+    if (!Medicament) {
+        return res.status(204).json({ 'message': `Medicament code ${req.params.Code} not found` });
     }
-    res.json(medicament);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération du médicament.', error: err.message });
-  }
+    res.json(Code);
 }
 
-export default  {
-  getAllMedicaments,
-  updateMedicament,
-  deleteMedicament,
-  getMedicament,
+const createNewMedicament = async (req, res) => {
+    /* if (!req?.body?.nom || !req?.body?.prénom || !req?.body?.matricule || !req?.body?.sexe || !req?.body?.adresse  || !req?.body?.telephone ) {
+        return res.status(400).json({ 'message': 'all the champs are required' });
+    } */
+
+    const { Code, Medicaments, Prix} = req.body;
+    if (!Code || !Medicaments || !Prix ) return res.status(400).json({ 'message': 'all the chapms are required.' });
+    // check for duplicate usernames in the db
+
+    const duplicate = await Medicament.findOne({ Code: req.body.Code }).exec();
+    if (duplicate) return res.sendStatus(409); //Conflict
+
+    try {
+        const result = await Medicament.create({
+            Code: req.body.Code,
+            Medicaments: req.body.Medicaments,
+            Prix: req.body.Prix,
+           
+        });
+
+        console.log(result)
+
+        res.status(201).json({ 'success': 'New medicament created!' });
+    } catch (err) {
+        console.error(err);
+    }
 };
+
+const deleteMedicament = async (req, res) => {
+    if (!req?.body?.Code) {
+        return res.status(400).json({ "message": 'Medicament Code required' });
+    }
+
+    const medicament = await Medicament.findOne({ Code: req.body.Code }).exec();
+    if (!medicament) {
+        return res.status(204).json({ 'message': 'Medicament Code not found' });
+    }
+    const result = await medicament.deleteOne({ Code: req.body.Code });
+    res.json(result);
+}
+
+export default {
+    getAllMedicaments,
+    getMedicament,
+    createNewMedicament,
+    deleteMedicament
+}

@@ -6,9 +6,12 @@ const ordonnanceSchema = new Schema({
         type:String,
         required: true
     },
-    Nom_Medicament:{
-        type:String,
-        required: true
+    Medicaments:{
+        medicament:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Medicament',
+            required: true
+        }
     },
     Prix_Total:{
         type:Number,

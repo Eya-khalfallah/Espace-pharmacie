@@ -1,65 +1,67 @@
 import Ordonnance from'../model/Ordonnance.js';
 
-// Middleware pour obtenir toutes les ordonnances
-async function getAllOrdonnances(req, res) {
-  try {
+
+const getAllOrdonnances = async (req, res) => {
     const ordonnances = await Ordonnance.find();
+    if (!ordonnances) return res.status(204).json({ 'message': 'No ordonnances found' });
     res.json(ordonnances);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des ordonnances.', error: err.message });
-  }
 }
 
-// Middleware pour créer une nouvelle ordonnance
-async function createNewOrdonnance(req, res) {
-  try {
-    const newOrdonnance = await Ordonnance.create(req.body);
-    res.json(newOrdonnance);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'ordonnance.', error: err.message });
-  }
-}
-
-// Middleware pour mettre à jour une ordonnance
-async function updateOrdonnance(req, res) {
-  try {
-    const { id } = req.params;
-    const updatedOrdonnance = await Ordonnance.findByIdAndUpdate(id, req.body, { new: true });
-    res.json(updatedOrdonnance);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour de l\'ordonnance.', error: err.message });
-  }
-}
-
-// Middleware pour supprimer une ordonnance
-async function deleteOrdonnance(req, res) {
-  try {
-    const { id } = req.params;
-    await Ordonnance.findByIdAndRemove(id);
-    res.json({ message: 'L\'ordonnance a été supprimée avec succès.' });
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de l\'ordonnance.', error: err.message });
-  }
-}
-
-// Middleware pour obtenir une ordonnance par son ID
-async function getOrdonnance(req, res) {
-  try {
-    const { id } = req.params;
-    const ordonnance = await Ordonnance.findById(id);
-    if (!ordonnance) {
-      return res.status(404).json({ message: 'L\'ordonnance demandée est introuvable.' });
+const getOrdonnance = async (req, res) => {
+    if (!req?.params?.matricule) return res.status(400).json({ "message": 'Ordonnance metricule required' });
+    const ordonnance = await Ordonnance.findOne({ Matricule: req.params.Matricule }).exec();
+    if (!Ordonnance) {
+        return res.status(204).json({ 'message': `Ordonnance matricule ${req.params.matricule} not found` });
     }
-    res.json(ordonnance);
-  } catch (err) {
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de l\'ordonnance.', error: err.message });
-  }
+    res.json(matricule);
+}
+
+const createNewOrdonnance = async (req, res) => {
+    /* if (!req?.body?.nom || !req?.body?.prénom || !req?.body?.matricule || !req?.body?.sexe || !req?.body?.adresse  || !req?.body?.telephone ) {
+        return res.status(400).json({ 'message': 'all the champs are required' });
+    } */
+
+    const { Matricule, Medicaments, Prix_Total, Date_Ajout, Id_Benificiaire} = req.body;
+    if (!Matricule || !Medicaments || !Prix_Total || !Date_Ajout || !Id_Benificiaire ) return res.status(400).json({ 'message': 'all the chapms are required.' });
+    // check for duplicate usernames in the db
+
+    const duplicate = await Ordonnance.findOne({ Matricule: req.body.Matricule }).exec();
+    if (duplicate) return res.sendStatus(409); //Conflict
+
+    try {
+        const result = await Ordonnance.create({
+            Matricule: req.body.Matricule,
+            Medicaments: req.body.Medicaments,
+            Prix_Total: req.body.Prix_Total,
+            Date_Ajout: req.body.Date_Ajout,
+            Id_Benificiaire: req.body.Id_Benificiaire,
+            
+        });
+
+        console.log(result)
+
+        res.status(201).json({ 'success': 'New ordonnance created!' });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+const deleteOrdonnance = async (req, res) => {
+    if (!req?.body?.Matricule) {
+        return res.status(400).json({ "message": 'Ordonnance matricule required' });
+    }
+
+    const ordonnance = await Ordonnance.findOne({ Matricule: req.body.Matricule }).exec();
+    if (!ordonnance) {
+        return res.status(204).json({ 'message': 'Ordonnance matricule not found' });
+    }
+    const result = await ordonnance.deleteOne({ Matricule: req.body.Matricule });
+    res.json(result);
 }
 
 export default {
-  getAllOrdonnances,
-  createNewOrdonnance,
-  updateOrdonnance,
-  deleteOrdonnance,
-  getOrdonnance
-};
+    getAllOrdonnances,
+    getOrdonnance,
+    createNewOrdonnance,
+    deleteOrdonnance
+}

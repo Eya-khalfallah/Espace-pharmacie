@@ -8,6 +8,7 @@ import express from "express";
 import authRouter from './routes/auth.js';
 import usersRouter from './routes/api/users.js';
 import ordonnancesRouter from './routes/api/ordonnances.js';
+import medicamentsRouter from './routes/api/medicaments.js';
 import registerRouter from './routes/register.js';
 import refreshRouter from './routes/refresh.js'
 
@@ -53,6 +54,7 @@ app.use(verifyJWT);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 app.use('/ordonnances', ordonnancesRouter);
+app.use('/medicaments', medicamentsRouter);
 
 //serve static files
 app.use(express.static(path.join(__dirname, '/public')));
