@@ -7,9 +7,10 @@ const verifyRoles = require('../../middleware/verifyRoles.js');
 router.route('/')
     .get(verifyRoles(ROLES_LIST.Admin), adherentsController.getAllAdherents)
     .post(verifyRoles(ROLES_LIST.Admin), adherentsController.createNewAdherent)
-    .delete(verifyRoles(ROLES_LIST.Admin), adherentsController.deleteAdherent);
 
 router.route('/matricule')
-    .get(verifyRoles(ROLES_LIST.Admin), adherentsController.getAdherent);
+    .get(verifyRoles(ROLES_LIST.Admin), adherentsController.getAdherent)
+    .delete(verifyRoles(ROLES_LIST.Admin), adherentsController.deleteAdherent);
+
 
 module.exports=  router;

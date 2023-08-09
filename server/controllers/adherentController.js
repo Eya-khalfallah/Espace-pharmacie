@@ -1,5 +1,6 @@
 const Adherent = require('../model/Adherent.js');
 const Beneficiaire = require('../model/Beneficiaire.js');
+const beneficiairesController = require('./beneficiaireController.js');
 
 const getAllAdherents = async (req, res) => {
     const adherents = await Adherent.find();
@@ -13,9 +14,9 @@ const getAdherent = async (req, res) => {
     if (!adherent) {
         return res.status(204).json({ 'message': `Adherent matricule ${req.body.matricule} not found` });
     }
-    res.json(adherent);
     const beneficiaires = await Beneficiaire.find({ adherent: adherent });
-    res.json(beneficiaires);
+    const data = { "adherent": adherent, "beneficiaires": beneficiaires}
+    res.json(data);
 }
 
 const createNewAdherent = async (req, res) => {
@@ -49,16 +50,17 @@ const createNewAdherent = async (req, res) => {
 };
 
 const deleteAdherent = async (req, res) => {
-    if (!req?.body?.matricule) {
-        return res.status(400).json({ "message": 'Adherent matricule required' });
-    }
-
+    if (!req?.body?.matricule) return res.status(400).json({ "message": 'Adherent matricule required' });
     const adherent = await Adherent.findOne({ matricule: req.body.matricule }).exec();
     if (!adherent) {
-        return res.status(204).json({ 'message': 'Adherent matricule not found' });
+        return res.status(204).json({ 'message': `Adherent matricule ${req.body.matricule} not found` });
     }
     const result = await adherent.deleteOne({ matricule: req.body.matricule });
-    res.json(result);
+    const beneficiaires = await Beneficiaire.find({ adherent: adherent });
+    beneficiaires.forEach(element => {
+        element.deleteOne();
+    });
+    res.status(201).json({ 'success': 'Adherent deleted!' });
 }
 
 module.exports = {

@@ -1,4 +1,5 @@
 const Beneficiaire = require('../model/Beneficiaire')
+const Adherent = require('../model/Adherent')
 
 const getAllbeneficiaires = async (req, res) => {
     const beneficiaires = await Beneficiaire.find();
@@ -19,12 +20,14 @@ const createNewbeneficiaire = async (req, res) => {
     /* if (!req?.body?.nom || !req?.body?.prénom || !req?.body?.matricule || !req?.body?.sexe || !req?.body?.adresse  || !req?.body?.telephone ) {
         return res.status(400).json({ 'message': 'all the champs are required' });
     } */
-
-    const { nom, prénom, matricule, sexe, adresse, telephone } = req.body;
+    const { adherent, nom, prénom, matricule, sexe, adresse, telephone } = req.body;
     if (!adherent || !nom || !prénom || !matricule || !sexe || !adresse || !telephone ) return res.status(400).json({ 'message': 'all the chapms are required.' });
-    // check for duplicate usernames in the db
 
-    const duplicate = await Beneficiaire.findOne({ matricule: req.body.matricule , adherent: req.body.adherent }).exec();
+    const adht = await Adherent.findOne({"matricule": req.body.adherent.matricule}).exec();
+    if (!adht) return res.status(400).json({ 'message': 'adherent not found' });
+
+    // check for duplicate usernames in the db
+    const duplicate = await Beneficiaire.findOne({ adherent: req.body.adherent, matricule: req.body.matricule }).exec();
     if (duplicate) return res.sendStatus(409); //Conflict
 
     try {
@@ -47,10 +50,7 @@ const createNewbeneficiaire = async (req, res) => {
 };
 
 const deletebeneficiaire = async (req, res) => {
-    if (!req?.body?.matricule) {
-        return res.status(400).json({ "message": 'beneficiaire matricule required' });
-    }
-
+    if (!req?.body?.matricule) return res.status(400).json({ "message": 'beneficiaire matricule required' });
     const beneficiaire = await Beneficiaire.findOne({ matricule: req.body.matricule }).exec();
     if (!beneficiaire) {
         return res.status(204).json({ 'message': 'beneficiaire matricule not found' });
